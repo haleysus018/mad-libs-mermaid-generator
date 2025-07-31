@@ -8,7 +8,7 @@ from wtforms.validators import InputRequired
 app = Flask(__name__)
 
 # Initialize OpenAI client with  key
-client = OpenAI(api_key="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")
+client = OpenAI(api_key="your api key")
 app.config['SECRET_KEY'] = 'supersecretkey'
 app.config['UPLOAD_FOLDER'] = 'static/files'
 upload_folder = os.path.join(os.path.abspath(os.path.dirname(__file__)), app.config['UPLOAD_FOLDER'])
