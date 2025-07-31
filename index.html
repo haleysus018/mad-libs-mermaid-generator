@@ -1,0 +1,83 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flowchart Generator</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    .center { text-align: center; }
+    #mermaidContainer { margin-top: 20px; }
+    #uploadSection { margin-top: 40px; }
+</style>
+<script>
+mermaid.initialize({ startOnLoad: false });
+// fetch await do something ususally in a try catch or raise loop 
+    async function generateFlowchart() {
+  const topic = document.getElementById('topic').value;
+  const nodes = document.getElementById('nodes').value;
+  const edges = document.getElementById('edges').value;
+// awaits response from route generate flowchart response.
+  const response = await fetch('/generate_flowchart', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' }, // interpret data
+    body: JSON.stringify({ topic, nodes, edges }), // take object with properties topic nodes and edge put into json
+  });
+  //asigns parsed json object to data
+  const data = await response.json();
+  const mermaidCode = data.mermaid_code;
+// text content in mermaidtext as the json code
+  document.getElementById('mermaidText').textContent = mermaidCode;
+  try {
+    // valid?
+    mermaid.parse(mermaidCode);
+// render mermaid code 
+const rendered_mermaid = await mermaid.render('mermaidSvg',mermaidCode);
+svg=rendered_mermaid.svg
+    const container = document.getElementById('mermaidContainer');
+    container.innerHTML = svg;
+  } catch (error) {
+    console.error('Mermaid rendering error:', error);
+    document.getElementById('mermaidContainer').textContent = 'Error rendering Mermaid diagram.';
+  }
+}
+async function generateHandDrawnList() {
+  const topic = document.getElementById('topic').value;
+  const nodes = document.getElementById('nodes').value;
+  const edges = document.getElementById('edges').value;
+  const response = await fetch('/hand_drawn', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ topic, nodes, edges }),
+  });
+  // reads as json, data extract flowchart_list property as flowchartList
+  const data = await response.json();
+  const flowchartList = data.flowchart_list;
+  // set handdrawnList tex content as flwochartlist 
+  document.getElementById('handDrawnList').value = flowchartList;
+}
+</script>
+</head>
+<body>
+<h2 class="center">Flowchart Creator</h2>
+<label>Topic of the flowchart: <input type="text" id="topic" /></label><br/><br/>
+<label>Number of nodes: <input type="number" id="nodes" min="1" /></label><br/><br/>
+<label>Number of edges: <input type="number" id="edges" min="0" /></label><br/><br/>
+<button onclick="generateFlowchart()">Generate Flowchart</button>
+<button onclick="generateHandDrawnList()">Hand Drawn</button>
+<div id="mermaidContainer" class="center"></div>
+<pre id="mermaidText" style="background:#eee; padding:10px; margin-top:10px;"></pre>
+    <textarea id="handDrawnList" rows="8" cols="50" readonly style="background:#fafafa; border:1px solid #ccc;"></textarea><br/><br/>
+ <form method='POST' enctype='multipart/form-data'>
+        {{form.hidden_tag()}}
+        {{form.file()}}
+        {{form.submit()}}
+    </form>
+</body>
+</html>
+
+
+
