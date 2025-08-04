@@ -1,10 +1,7 @@
 from flask import Flask, render_template, request, jsonify
-from openai import OpenAI
-from flask_wtf import FlaskForm
-from wtforms import FileField, SubmitField
-from werkzeug.utils import secure_filename
+from openai import OpenAI 
 import os
-from wtforms.validators import InputRequired
+
 app = Flask(__name__)
 
 # Initialize OpenAI client with  key
