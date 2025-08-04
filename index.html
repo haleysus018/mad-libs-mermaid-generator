@@ -3,9 +3,10 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
+<!--rendering in latest IE version-->
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Flowchart Generator</title>
+<title>openai Flowchart Generator</title>
 <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
 <style>
     body { font-family: Arial, sans-serif; padding: 20px; }
@@ -53,7 +54,7 @@ async function generateHandDrawnList() {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ topic, nodes, edges }),
   });
-  // reads as json, data extract flowchart_list property as flowchartList
+  // reads as json daat extract flowchart_list property as flowchartList
   const data = await response.json();
   const flowchartList = data.flowchart_list;
   // set handdrawnList tex content as flwochartlist 
@@ -71,11 +72,6 @@ async function generateHandDrawnList() {
 <div id="mermaidContainer" class="center"></div>
 <pre id="mermaidText" style="background:#eee; padding:10px; margin-top:10px;"></pre>
     <textarea id="handDrawnList" rows="8" cols="50" readonly style="background:#fafafa; border:1px solid #ccc;"></textarea><br/><br/>
- <form method='POST' enctype='multipart/form-data'>
-        {{form.hidden_tag()}}
-        {{form.file()}}
-        {{form.submit()}}
-    </form>
 </body>
 </html>
 
