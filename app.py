@@ -1,30 +1,18 @@
-from flask import Flask, render_template, request, jsonify
-from openai import OpenAI 
+# server.py
 import os
-
+from flask import Flask, render_template, request, jsonify
+from openai import OpenAI
+import os
+from wtforms.validators import InputRequired
 app = Flask(__name__)
 
 # Initialize OpenAI client with  key
-client = OpenAI(api_key="your api key")
-app.config['SECRET_KEY'] = 'supersecretkey'
-app.config['UPLOAD_FOLDER'] = 'static/files'
-upload_folder = os.path.join(os.path.abspath(os.path.dirname(__file__)), app.config['UPLOAD_FOLDER'])
-if not os.path.exists(upload_folder):
-    os.makedirs(upload_folder)
-class UploadFileForm(FlaskForm):
-    file = FileField("File", validators=[InputRequired()])
-    submit = SubmitField("Upload File")
+client = OpenAI(api_key="SECRET_API_KEY")
+
 
 # rendreing html page
 @app.route('/', methods=['GET',"POST"])
 @app.route('/home', methods=['GET',"POST"])
-def home():
-    form = UploadFileForm()
-    if form.validate_on_submit():
-        file = form.file.data # First grab the file
-        file.save(os.path.join(os.path.abspath(os.path.dirname(__file__)),app.config['UPLOAD_FOLDER'],secure_filename(file.filename))) # Then save the file
-        return "File has been uploaded."
-    return render_template('index.html', form=form)
 #generate_flowchart route for later use in html generation
 @app.route('/generate_flowchart', methods=['POST'])
 def generate_flowchart():
@@ -80,6 +68,8 @@ def hand_drawn():
     #puts into json to be dealt with in html
     flowchart_list = response.choices[0].message.content.strip()
     return jsonify({"flowchart_list": flowchart_list})
+
+app.run(host='0.0.0.0', port=5000)
 
 
 if __name__ == '__main__':
